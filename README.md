@@ -19,4 +19,4 @@ This project implements a Flask-based web application for a currency system port
 1. Clone this repository:
 
 ```bash
-git clone [https://github.com/](https://github.com/)<your-username>/currency-system-portal.git
+git clone [https://github.com/](https://github.com/GuptajiRocks/sit-coin.git)
