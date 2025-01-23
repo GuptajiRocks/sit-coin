@@ -59,12 +59,11 @@
         const accessCode = document.getElementById('accessCode').value;
 
         if (accessCode === '1234') {
-            // Submit the form to /register route
+            
             signupForm.action = '/register'; 
             return; 
         }
 
-        // Handle incorrect access code (e.g., display an error message)
         alert('Incorrect Access Code');
         event.preventDefault(); 
     });
