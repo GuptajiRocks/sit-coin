@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: .5;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-pink-500 to-blue-500 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg p-10 w-96">
+        <h1 class="text-3xl font-bold mb-6 text-center text-blue-500 animate-pulse">Signup</h1>
+        <form id="signupForm">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 font-bold mb-2">Username</label>
+                <input type="text" id="username" name="username" class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500" placeholder="Enter Username">
+            </div>
+            <div class="mb-4">
+                <label for="phone" class="block text-gray-700 font-bold mb-2">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500" placeholder="Enter Phone Number">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
+                <input type="password" id="password" name="password" class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500" placeholder="Enter Password">
+            </div>
+            <button type="button" id="submitBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md w-full">Next</button>
+        </form>
+
+        <div id="accessCodeSection" class="hidden mt-4">
+            <label for="accessCode" class="block text-gray-700 font-bold mb-2">Enter Access Code</label>
+            <input type="text" id="accessCode" name="accessCode" class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500" placeholder="Enter Access Code">
+            <button type="submit" form="signupForm" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md w-full mt-2">Submit</button>
+        </div>
+    </div>
+</body>
+
+<script>
+    const submitBtn = document.getElementById('submitBtn');
+    const accessCodeSection = document.getElementById('accessCodeSection');
+
+    submitBtn.addEventListener('click', () => {
+        accessCodeSection.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+    });
+
+    const signupForm = document.getElementById('signupForm');
+
+    signupForm.addEventListener('submit', (event) => {
+        const accessCode = document.getElementById('accessCode').value;
+
+        if (accessCode === '1234') {
+            // Submit the form to /register route
+            signupForm.action = '/register'; 
+            return; 
+        }
+
+        // Handle incorrect access code (e.g., display an error message)
+        alert('Incorrect Access Code');
+        event.preventDefault(); 
+    });
+</script>
+
+</html>

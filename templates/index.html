@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #1e1e2f, #74ebd5); }
+            50% { background: linear-gradient(135deg, #acb6e5, #1e1e2f); }
+        }
+
+        .animate-gradientShift {
+            animation: gradientShift 10s infinite alternate;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <!-- Navbar & Sidebar -->
+    <div class="flex">
+        <nav id="sidebar" class="bg-gray-800 text-white w-64 h-screen fixed transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-gray-700">
+                <h1 class="text-xl font-bold">Currency Portal</h1>
+                <button id="sidebar-close" aria-label="Close Sidebar" class="block md:hidden focus:outline-none">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="px-6 py-4 space-y-4">
+                <a href="#" class="block hover:text-blue-400 transition">Login</a>
+                <a href="#" class="block hover:text-blue-400 transition">Sign Up</a>
+                <a href="#" class="block hover:text-blue-400 transition">About Us</a>
+            </div>
+        </nav>
+
+        <div class="flex-1">
+            <!-- Toggle Button for Sidebar -->
+            <button id="sidebar-open" aria-label="Open Sidebar" class="fixed top-4 left-4 z-50 bg-blue-500 text-white p-2 rounded-md shadow-md md:hidden focus:outline-none">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+
+            <!-- Hero Section -->
+            <section class="flex flex-col items-center justify-center h-screen px-6 text-center text-white bg-gradient-to-br from-gray-900 to-blue-600 animate-gradientShift">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">Welcome to Currency Portal</h1>
+                <p class="text-lg md:text-xl max-w-3xl mb-8">
+                    Your one-stop solution for secure and seamless currency payments worldwide. 
+                    Manage transactions efficiently with cutting-edge tools and reliable support.
+                </p>
+                <button class="px-6 py-3 bg-blue-400 hover:bg-blue-500 text-white rounded-lg shadow-lg text-lg font-medium transition transform hover:scale-105 focus:ring-4 focus:ring-blue-300">
+                    Get Started
+                </button>
+            </section>
+
+            <!-- Footer -->
+            <footer class="text-center py-6 bg-gray-800 text-white text-sm">
+                <p>&copy; 2025 Currency Portal. All rights reserved. | 
+                    <a href="#" class="hover:text-blue-400 transition">Privacy Policy</a> | 
+                    <a href="#" class="hover:text-blue-400 transition">Terms of Service</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const openBtn = document.getElementById('sidebar-open');
+        const closeBtn = document.getElementById('sidebar-close');
+
+        openBtn.addEventListener('click', () => {
+            sidebar.classList.remove('-translate-x-full');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+        });
+    </script>
+</body>
+</html>
