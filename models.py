@@ -8,7 +8,7 @@ cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
+    phone INTEGER UNIQUE NOT NULL,
     password TEXT NOT NULL,
     balance REAL NOT NULL
 )
