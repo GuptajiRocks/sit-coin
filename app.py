@@ -17,3 +17,7 @@ def sign_up():
 @app.route("/contact")
 def contact_page():
     return render_template("contact.html")
+
+@app.route("/aboutus")
+def about_us_page():
+    return render_template("aboutus.html")
