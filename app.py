@@ -50,7 +50,7 @@ def register():
         finally:
             conn.close()
 
-        qr_data = f"user_id:{user_id}"
+        qr_data = f"user_id:{str(phone)}"
         qr = qrcode.make(qr_data)
         qr_path = f'static/qr_codes/{user_id}.png'
         os.makedirs(os.path.dirname(qr_path), exist_ok=True)
