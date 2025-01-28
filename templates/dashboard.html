@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, {{ user['username'] }}</h2>
+    <p>Account Balance: ${{ user['balance'] }}</p>
+    <img src="{{ url_for('static', filename='qr_codes/' + str(user['id']) + '.png') }}" alt="Your QR Code"><br><br>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>

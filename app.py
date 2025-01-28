@@ -35,21 +35,20 @@ def get_db_connection():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        email = request.form['phone']
+        phone = request.form['phone']
         password = generate_password_hash(request.form['password'])
 
         conn = get_db_connection()
         try:
             conn.execute(
-                'INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, ?)',
-                (username, email, password, 1000)
+                'INSERT INTO users (username, phone, password, balance) VALUES (?, ?, ?, ?)',
+                (username, phone, password, 1000)
             )
             conn.commit()
             user_id = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()['id']
         finally:
             conn.close()
 
-        # Generate QR code
         qr_data = f"user_id:{user_id}"
         qr = qrcode.make(qr_data)
         qr_path = f'static/qr_codes/{user_id}.png'
@@ -60,3 +59,46 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        phone = request.form['phone']
+        password = request.form['password']
+
+        conn = get_db_connection()
+        user = conn.execute('SELECT * FROM users WHERE phone = ?', (phone,)).fetchone()
+        conn.close()
+
+        if user and check_password_hash(user['password'], password):
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            flash('Login successful!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid phone or password.', 'danger')
+
+    return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if 'user_id' not in session:
+        flash('Please log in to access your dashboard.', 'warning')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    conn.close()
+
+    qr_path = f'static/qr_codes/{user_id}.png'
+    return render_template('dashboard.html', user=user, qr_path=qr_path)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
