@@ -5,6 +5,7 @@ import os
 import qrcode
 
 app = Flask(__name__)
+app.secret_key = '123'
 
 @app.route("/")
 def main_page():
