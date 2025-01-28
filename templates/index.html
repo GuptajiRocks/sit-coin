@@ -155,17 +155,16 @@
                 </div>
             </section>
 
-            <!-- Footer -->
             <footer class="glass-effect py-6 md:py-8 relative z-10">
                 <div class="container mx-auto px-4 sm:px-6">
                     <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <p class="text-sm text-gray-300 text-center md:text-left">
-                            &copy; 2025 Currency Portal. All rights reserved.
+                            &copy; Sit-Coin || A.G & V.S
                         </p>
                         <div class="flex flex-wrap justify-center md:justify-end items-center gap-4 md:gap-6">
                             <a href="#" class="text-sm text-gray-300 hover:text-white transition-colors">Privacy Policy</a>
                             <a href="#" class="text-sm text-gray-300 hover:text-white transition-colors">Terms of Service</a>
-                            <a href="#" class="text-sm text-gray-300 hover:text-white transition-colors">Contact</a>
+                            <a href="/contact" class="text-sm text-gray-300 hover:text-white transition-colors">Contact</a>
                         </div>
                     </div>
                 </div>
@@ -174,7 +173,6 @@
     </div>
 
     <script>
-        // Mobile menu functionality
         const sidebar = document.getElementById('sidebar');
         const openBtn = document.getElementById('sidebar-open');
         const closeBtn = document.getElementById('sidebar-close');
@@ -196,7 +194,6 @@
         openBtn.addEventListener('click', () => toggleSidebar(true));
         closeBtn.addEventListener('click', () => toggleSidebar(false));
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', (e) => {
             if (window.innerWidth < 768) {
                 const isClickInside = sidebar.contains(e.target) || openBtn.contains(e.target);
@@ -206,7 +203,6 @@
             }
         });
 
-        // Handle window resize
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 768) {
                 sidebar.classList.remove('-translate-x-full');
@@ -218,7 +214,6 @@
             }
         });
 
-        // GSAP Animations with responsive timing
         const isMobile = window.innerWidth < 768;
         const timing = isMobile ? 0.6 : 1;
 

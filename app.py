@@ -14,3 +14,6 @@ def login_page():
 def sign_up():
     return render_template("signup.html")
 
+@app.route("/contact")
+def contact_page():
+    return render_template("contact.html")
