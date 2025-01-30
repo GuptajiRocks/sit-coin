@@ -3,6 +3,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 import qrcode
+from dotenv import load_dotenv
+from psycopg2 import pool, sql
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = '123'
@@ -28,8 +32,9 @@ def about_us_page():
     return render_template("aboutus.html")
 
 def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
+    connection_string = os.getenv('DATABASE_URL')
+    connection_pool = pool.SimpleConnectionPool(1, 10, connection_string)
+    conn = connection_pool.getconn()
     return conn
 
 @app.route('/register', methods=['GET', 'POST'])
