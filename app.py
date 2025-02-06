@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3
 import os
 import qrcode
 from dotenv import load_dotenv
@@ -45,13 +44,11 @@ def register():
         password = generate_password_hash(request.form['password'])
 
         conn = get_db_connection()
+        cursor = conn.cursor()
         try:
-            conn.execute(
-                'INSERT INTO users (username, phone, password, balance) VALUES (?, ?, ?, ?)',
-                (username, phone, password, 1000)
-            )
+            cursor.execute('INSERT INTO users (username, phone, password, balance) VALUES (%s, %s, %s, %s)',(username, phone, password, 1000))
             conn.commit()
-            user_id = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()['id']
+            user_id = cursor.execute('SELECT id FROM users WHERE username = %s', (username,)).fetchone()['id']
         finally:
             conn.close()
 
@@ -73,7 +70,8 @@ def login():
         password = request.form['password']
 
         conn = get_db_connection()
-        user = conn.execute('SELECT * FROM users WHERE phone = ?', (phone,)).fetchone()
+        cursor = conn.cursor()
+        user = cursor.execute('SELECT * FROM users WHERE phone = %s', (phone,)).fetchone()
         conn.close()
 
         if user and check_password_hash(user['password'], password):
@@ -94,7 +92,8 @@ def dashboard():
 
     user_id = session['user_id']
     conn = get_db_connection()
-    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    cursor = conn.cursor()
+    user = cursor.execute('SELECT * FROM users WHERE username = %s', (user_id,)).fetchone()
     conn.close()
 
     qr_path = f'static/qr_codes/{user_id}.png'
