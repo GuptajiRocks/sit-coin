@@ -48,13 +48,13 @@ def register():
         try:
             cursor.execute('INSERT INTO users (username, phone, password, balance) VALUES (%s, %s, %s, %s)',(username, phone, password, 1000))
             conn.commit()
-            user_id = cursor.execute('SELECT id FROM users WHERE username = %s', (username,)).fetchone()['id']
+            #user_id = cursor.execute('SELECT id FROM users WHERE username = %s', (username,)).fetchone()['id']
         finally:
             conn.close()
 
         qr_data = f"user_id:{str(phone)}"
         qr = qrcode.make(qr_data)
-        qr_path = f'static/qr_codes/{user_id}.png'
+        qr_path = f'static/qr_codes/{phone}.png'
         os.makedirs(os.path.dirname(qr_path), exist_ok=True)
         qr.save(qr_path)
 
@@ -67,16 +67,19 @@ def register():
 def login():
     if request.method == 'POST':
         phone = request.form['phone']
+        phone = str(phone)
         password = request.form['password']
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        user = cursor.execute('SELECT * FROM users WHERE phone = %s', (phone,)).fetchone()
+        cursor.execute('SELECT * FROM users WHERE phone = %s', (phone,))
+        user = cursor.fetchone()
+
         conn.close()
 
-        if user and check_password_hash(user['password'], password):
-            session['user_id'] = user['id']
-            session['username'] = user['username']
+        if user and check_password_hash(user[3], password):
+            session['user_id'] = user[0]
+            session['username'] = user[1]
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -93,7 +96,8 @@ def dashboard():
     user_id = session['user_id']
     conn = get_db_connection()
     cursor = conn.cursor()
-    user = cursor.execute('SELECT * FROM users WHERE username = %s', (user_id,)).fetchone()
+    cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+    user = cursor.fetchone()
     conn.close()
 
     qr_path = f'static/qr_codes/{user_id}.png'
