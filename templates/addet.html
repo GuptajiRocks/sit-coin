@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-blue-600 to-green-400 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
+        <h1 class="text-3xl font-bold text-center text-blue-600 mb-6">User Details</h1>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                <thead>
+                    <tr class="bg-blue-500 text-white">
+                        <th class="py-3 px-4 text-left">Username</th>
+                        <th class="py-3 px-4 text-left">Phone</th>
+                        <th class="py-3 px-4 text-left">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr class="border-b hover:bg-gray-100 transition">
+                        <td class="py-3 px-4">{{ user[0] }}</td>
+                        <td class="py-3 px-4">{{ user[1] }}</td>
+                        <td class="py-3 px-4 font-semibold text-green-600">${{ user[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-6 text-center">
+            <a href="/" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition">
+                Sign Out
+            </a>
+        </div>
+    </div>
+</body>
+</html>

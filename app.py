@@ -34,6 +34,15 @@ def contact_page():
 def about_us_page():
     return render_template("aboutus.html")
 
+@app.route("/admin/details")
+def user_details():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT username, phone, balance FROM users;")
+    rst = cursor.fetchall()
+
+    return render_template("addet.html", users=rst)
+
 def get_db_connection():
     connection_string = os.getenv('DATABASE_URL')
     connection_pool = pool.SimpleConnectionPool(1, 10, connection_string)
@@ -52,7 +61,6 @@ def register():
         try:
             cursor.execute('INSERT INTO users (username, phone, password, balance) VALUES (%s, %s, %s, %s)',(username, phone, password, 1000))
             conn.commit()
-            #user_id = cursor.execute('SELECT id FROM users WHERE username = %s', (username,)).fetchone()['id']
         finally:
             conn.close()
 
