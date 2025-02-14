@@ -113,7 +113,7 @@ def dashboard():
     conn.close()
 
     qr_path = f'static/qr_codes/{user_id}.png'
-    return render_template('dashboard.html', user=user, qr_path=qr_path)
+    return render_template('dashboard.html', user=user)
 
 @app.route('/logout')
 def logout():
