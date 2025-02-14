@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import qrcode
 from dotenv import load_dotenv
-from psycopg2 import pool, sql
+from psycopg2 import pool
 
 load_dotenv()
 
@@ -13,6 +13,10 @@ app.secret_key = '123'
 @app.route("/")
 def main_page():
     return render_template("index.html")
+
+@app.route("/adlogin")
+def admin_entry():
+    return render_template("adlogin.html")
 
 @app.route("/login")
 def login_page():
