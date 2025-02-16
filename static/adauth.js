@@ -4,7 +4,6 @@ function validate(event){
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     if ( username == "arihant" && password == "arihant123"){
-        alert ("Login successfully");
         window.location.replace("/admin/details");
         return false;
     }
