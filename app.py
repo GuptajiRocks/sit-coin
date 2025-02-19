@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import qrcode
 from dotenv import load_dotenv
-from psycopg2 import pool
+import psycopg2
+import io
 
 load_dotenv()
 
@@ -45,7 +46,7 @@ def user_details():
 
 def get_db_connection():
     connection_string = os.getenv('DATABASE_URL')
-    connection_pool = pool.SimpleConnectionPool(1, 10, connection_string)
+    connection_pool = psycopg2.pool.SimpleConnectionPool(1, 10, connection_string)
     conn = connection_pool.getconn()
     return conn
 
@@ -56,19 +57,19 @@ def register():
         phone = request.form['phone']
         password = generate_password_hash(request.form['password'])
 
+        qr_data = f"user_id:{str(phone)}"
+        qr = qrcode.make(qr_data)
+        qr_io = io.BytesIO()
+        qr.save(qr_io, format="PNG")
+        qr_binary = qr_io.getvalue()
+
         conn = get_db_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute('INSERT INTO users (username, phone, password, balance) VALUES (%s, %s, %s, %s)',(username, phone, password, 1000))
+            cursor.execute('INSERT INTO users (username, phone, password, balance, qr_code) VALUES (%s, %s, %s, %s, %s)',(username, phone, password, 1000, psycopg2.Binary(qr_binary)))
             conn.commit()
         finally:
-            conn.close()
-
-        qr_data = f"user_id:{str(phone)}"
-        qr = qrcode.make(qr_data)
-        qr_path = f'static/qr_codes/{phone}.png'
-        os.makedirs(os.path.dirname(qr_path), exist_ok=True)
-        qr.save(qr_path)
+            conn.close()        
 
         flash('Registration successful! Please log in.', 'success')
         return redirect(url_for('login'))
