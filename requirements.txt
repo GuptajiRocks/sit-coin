@@ -9,6 +9,7 @@ MarkupSafe==3.0.2
 numpy==2.2.2
 pillow==11.1.0
 python-dotenv==1.0.1
+psycopg2-binary==2.9.10
 pyzbar==0.1.9
 qrcode==8.0
 typing_extensions==4.12.2
