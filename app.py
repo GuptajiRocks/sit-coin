@@ -3,7 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import qrcode
 from dotenv import load_dotenv
-import psycopg2
+from psycopg2 import Binary as bt
+from psycopg2 import pool
 import io
 
 load_dotenv()
@@ -46,7 +47,7 @@ def user_details():
 
 def get_db_connection():
     connection_string = os.getenv('DATABASE_URL')
-    connection_pool = psycopg2.pool.SimpleConnectionPool(1, 10, connection_string)
+    connection_pool = pool.SimpleConnectionPool(1, 10, connection_string)
     conn = connection_pool.getconn()
     return conn
 
@@ -66,7 +67,7 @@ def register():
         conn = get_db_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute('INSERT INTO users (username, phone, password, balance, qr_code) VALUES (%s, %s, %s, %s, %s)',(username, phone, password, 1000, psycopg2.Binary(qr_binary)))
+            cursor.execute('INSERT INTO users (username, phone, password, balance, qr_code) VALUES (%s, %s, %s, %s, %s)',(username, phone, password, 1000, bt(qr_binary)))
             conn.commit()
         finally:
             conn.close()        
@@ -110,15 +111,37 @@ def dashboard():
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+    cursor.execute('SELECT phone, username, balance, qr_code FROM users WHERE id = %s', (user_id,))
     user = cursor.fetchone()
 
+    phone, username, balance, qr_binary = user
+
+    if qr_binary:
+        qr_io = io.BytesIO(qr_binary)
+        qr_data_uri = f"data:image/png;base64,{qr_io.getvalue().decode('latin1')}"
+    else:
+        qr_data_uri = None
+
     cursor.execute('SELECT sender_phone, receiver_phone, amount, timestamp FROM transactions WHERE sender_phone = %s or receiver_phone = %s ORDER BY timestamp DESC',
-                   (user[2], user[2],))
+                   (phone, phone,))
     transactions = cursor.fetchall()
 
     conn.close()
-    return render_template('dashboard.html', user=user, transactions=transactions)
+    return render_template('dashboard.html', user_id=user_id, username=username, balance=balance, transactions=transactions)
+
+@app.route('/get_qr/<int:user_id>')
+def get_qr(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute('SELECT qr_code FROM users WHERE id = %s', (user_id,))
+    qr_binary = cursor.fetchone()[0]
+    conn.close()
+
+    if qr_binary:
+        return send_file(io.BytesIO(qr_binary), mimetype='image/png')
+
+    return "QR Code not found", 404
 
 @app.route('/send_money', methods=['POST'])
 def send_money():
