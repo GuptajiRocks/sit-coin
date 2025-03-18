@@ -85,6 +85,26 @@
                 </div>
             </div>
 
+            <div class="bg-white shadow-md rounded-lg p-6 mt-6">
+                <h2 class="text-xl font-bold text-red-600 mb-4">Dispute a Transaction</h2>
+                
+                <form action="{{ url_for('dispute_transaction') }}" method="POST">
+                    <div>
+                        <label class="block text-gray-700 font-bold">Transaction ID</label>
+                        <input type="text" name="transaction_id" class="border border-gray-300 rounded-md px-4 py-2 w-full" required>
+                    </div>
+            
+                    <div>
+                        <label class="block text-gray-700 font-bold">Reason</label>
+                        <textarea name="reason" class="border border-gray-300 rounded-md px-4 py-2 w-full" required></textarea>
+                    </div>
+            
+                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md w-full mt-4">
+                        Submit Dispute
+                    </button>
+                </form>
+            </div>
+
         </div>
 
     </div>

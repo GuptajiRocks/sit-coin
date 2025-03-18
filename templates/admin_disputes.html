@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispute Requests</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+    <h1 class="text-3xl font-bold text-center text-red-600 mb-6">Dispute Requests</h1>
+    
+    <div class="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-lg">
+        <table class="min-w-full border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="py-2 px-4">User</th>
+                    <th class="py-2 px-4">Transaction ID</th>
+                    <th class="py-2 px-4">Reason</th>
+                    <th class="py-2 px-4">Status</th>
+                    <th class="py-2 px-4">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dispute in disputes %}
+                <tr class="border-b">
+                    <td class="py-2 px-4">{{ dispute[1] }}</td>
+                    <td class="py-2 px-4">{{ dispute[2] }}</td>
+                    <td class="py-2 px-4">{{ dispute[3] }}</td>
+                    <td class="py-2 px-4 text-{{ 'green-500' if dispute[4] == 'Resolved' else 'red-500' }}">
+                        {{ dispute[4] }}
+                    </td>
+                    <td class="py-2 px-4">
+                        <a href="{{ url_for('resolve_dispute', dispute_id=dispute[0]) }}" 
+                           class="bg-green-500 text-white px-4 py-2 rounded-md">Resolve</a>
+                        <a href="{{ url_for('reject_dispute', dispute_id=dispute[0]) }}" 
+                           class="bg-red-500 text-white px-4 py-2 rounded-md">Reject</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

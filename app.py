@@ -111,16 +111,10 @@ def dashboard():
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    cursor.execute('SELECT phone, username, balance, qr_code FROM users WHERE id = %s', (user_id,))
+    cursor.execute('SELECT phone, username, balance FROM users WHERE id = %s', (user_id,))
     user = cursor.fetchone()
 
-    phone, username, balance, qr_binary = user
-
-    if qr_binary:
-        qr_io = io.BytesIO(qr_binary)
-        qr_data_uri = f"data:image/png;base64,{qr_io.getvalue().decode('latin1')}"
-    else:
-        qr_data_uri = None
+    phone, username, balance = user
 
     cursor.execute('SELECT sender_phone, receiver_phone, amount, timestamp FROM transactions WHERE sender_phone = %s or receiver_phone = %s ORDER BY timestamp DESC',
                    (phone, phone,))
@@ -207,6 +201,44 @@ def logout():
     session.clear()
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
+
+@app.route('/admin/disputes')
+def admin_disputes():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT d.id, u.username, d.transaction_id, d.reason, d.status, d.created_at "
+        "FROM disputes d JOIN users u ON d.user_id = u.id ORDER BY d.created_at DESC"
+    )
+    disputes = cursor.fetchall()
+    conn.close()
+
+    return render_template('admin_disputes.html', disputes=disputes)
+
+@app.route('/admin/dispute/resolve/<int:dispute_id>')
+def resolve_dispute(dispute_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE disputes SET status = 'Resolved' WHERE id = %s", (dispute_id,))
+    conn.commit()
+    conn.close()
+
+    flash("Dispute resolved successfully.", "success")
+    return redirect(url_for('admin_disputes'))
+
+@app.route('/admin/dispute/reject/<int:dispute_id>')
+def reject_dispute(dispute_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE disputes SET status = 'Rejected' WHERE id = %s", (dispute_id,))
+    conn.commit()
+    conn.close()
+
+    flash("Dispute rejected.", "danger")
+    return redirect(url_for('admin_disputes'))
 
 if __name__ == '__main__':
     app.run(debug=True)
