@@ -216,18 +216,6 @@ def admin_disputes():
 
     return render_template('admin_disputes.html', disputes=disputes)
 
-@app.route('/admin/dispute/resolve/<int:dispute_id>')
-def resolve_dispute(dispute_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("UPDATE disputes SET status = 'Resolved' WHERE id = %s", (dispute_id,))
-    conn.commit()
-    conn.close()
-
-    flash("Dispute resolved successfully.", "success")
-    return redirect(url_for('admin_disputes'))
-
 @app.route('/dispute', methods=['POST'])
 def dispute_transaction():
     user_id = session.get('user_id')
@@ -251,6 +239,18 @@ def dispute_transaction():
 
     flash("Your dispute has been submitted.", "success")
     return redirect(url_for('dashboard'))
+
+@app.route('/admin/dispute/resolve/<int:dispute_id>')
+def resolve_dispute(dispute_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE disputes SET status = 'Resolved' WHERE id = %s", (dispute_id,))
+    conn.commit()
+    conn.close()
+
+    flash("Dispute resolved successfully.", "success")
+    return redirect(url_for('admin_disputes'))
 
 @app.route('/admin/dispute/reject/<int:dispute_id>')
 def reject_dispute(dispute_id):
