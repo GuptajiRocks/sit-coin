@@ -12,6 +12,12 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = '123'
 
+def get_db_connection():
+    connection_string = os.getenv('DATABASE_URL')
+    connection_pool = pool.SimpleConnectionPool(1, 10, connection_string)
+    conn = connection_pool.getconn()
+    return conn
+
 @app.route("/")
 def main_page():
     return render_template("index.html")
@@ -44,12 +50,6 @@ def user_details():
     rst = cursor.fetchall()
 
     return render_template("addet.html", users=rst)
-
-def get_db_connection():
-    connection_string = os.getenv('DATABASE_URL')
-    connection_pool = pool.SimpleConnectionPool(1, 10, connection_string)
-    conn = connection_pool.getconn()
-    return conn
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
