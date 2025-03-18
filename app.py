@@ -228,6 +228,30 @@ def resolve_dispute(dispute_id):
     flash("Dispute resolved successfully.", "success")
     return redirect(url_for('admin_disputes'))
 
+@app.route('/dispute', methods=['POST'])
+def dispute_transaction():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to dispute a transaction.", "danger")
+        return redirect(url_for('login'))
+
+    transaction_id = request.form.get('transaction_id')
+    reason = request.form.get('reason')
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Insert dispute request
+    cursor.execute(
+        "INSERT INTO disputes (user_id, transaction_id, reason) VALUES (%s, %s, %s)",
+        (user_id, transaction_id, reason)
+    )
+    conn.commit()
+    conn.close()
+
+    flash("Your dispute has been submitted.", "success")
+    return redirect(url_for('dashboard'))
+
 @app.route('/admin/dispute/reject/<int:dispute_id>')
 def reject_dispute(dispute_id):
     conn = get_db_connection()
