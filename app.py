@@ -121,7 +121,7 @@ def dashboard():
     transactions = cursor.fetchall()
 
     conn.close()
-    return render_template('dashboard.html', user_id=user_id, username=username, balance=balance, transactions=transactions)
+    return render_template('dashboard.html', user_id=user_id, username=username, balance=balance, transactions=transactions, phone=phone)
 
 @app.route('/get_qr/<int:user_id>')
 def get_qr(user_id):

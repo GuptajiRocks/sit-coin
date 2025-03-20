@@ -34,15 +34,15 @@
         </div>
 
         <!-- Money Transfer & Transaction History in Grid Layout -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
 
             <!-- Money Transfer Form -->
-            <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md h-96 flex flex-col justify-between">
                 <h2 class="text-2xl font-bold text-center text-blue-500 mb-4">Send Money</h2>
-                <form action="{{ url_for('send_money') }}" method="POST" class="space-y-4">
+                <form action="{{ url_for('send_money') }}" method="POST" class="space-y-4 flex-1">
                     <div>
                         <label class="block text-gray-700 font-bold">Your Phone Number</label>
-                        <input type="text" name="sender_phone" class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500" required>
+                        <input type="text" name="sender_phone" value="{{phone}}" readonly class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-bold">Receiver's Phone Number</label>
@@ -59,30 +59,30 @@
             </div>
 
             <!-- Transaction History -->
-            <div class="bg-white shadow-md rounded-lg p-6">
+            <div class="bg-white shadow-md rounded-lg p-6 h-96 flex flex-col">
                 <h2 class="text-xl font-bold text-green-600 mb-4 text-center">Transaction History</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-300 rounded-lg shadow-md">
-                        <thead>
-                            <tr class="bg-gray-200 text-gray-700">
-                                <th class="py-2 px-4 text-left">Sender</th>
-                                <th class="py-2 px-4 text-left">Receiver</th>
-                                <th class="py-2 px-4 text-left">Amount</th>
-                                <th class="py-2 px-4 text-left">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for transaction in transactions %}
-                            <tr class="border-b hover:bg-gray-100 transition">
-                                <td class="py-2 px-4">{{ transaction[0] }}</td>
-                                <td class="py-2 px-4">{{ transaction[1] }}</td>
-                                <td class="py-2 px-4 text-green-600 font-semibold">₹{{ transaction[2] }}</td>
-                                <td class="py-2 px-4">{{ transaction[3] }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="overflow-y-auto flex-1">
+                        <table class="min-w-full border border-gray-300 rounded-lg shadow-md">
+                            <thead class="sticky top-0 bg-gray-200">
+                                <tr class="bg-gray-200 text-gray-700">
+                                    <th class="py-2 px-4 text-left">Sender</th>
+                                    <th class="py-2 px-4 text-left">Receiver</th>
+                                    <th class="py-2 px-4 text-left">Amount</th>
+                                    <th class="py-2 px-4 text-left">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                <tr class="border-b hover:bg-gray-100 transition">
+                                    <td class="py-2 px-4">{{ transaction[0] }}</td>
+                                    <td class="py-2 px-4">{{ transaction[1] }}</td>
+                                    <td class="py-2 px-4 text-green-600 font-semibold">₹{{ transaction[2] }}</td>
+                                    <td class="py-2 px-4">{{ transaction[3] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
             </div>
 
             <div class="bg-white shadow-md rounded-lg p-6 mt-6">
