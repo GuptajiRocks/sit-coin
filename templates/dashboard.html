@@ -85,6 +85,94 @@
                     </div>
             </div>
 
+            <!-- QR Code Scanner Card -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-bold text-blue-600 text-center mb-4">Scan QR Code</h2>
+            
+            <div id="reader" class="border border-gray-300 rounded-md shadow-md mx-auto" style="width: 300px;"></div>
+            
+            <p class="mt-4 text-gray-700 font-semibold text-center">
+                Scanned QR Code: <span id="qr-result" class="text-green-600 font-bold"></span>
+            </p>
+        </div>
+
+        <!-- Transaction Modal (Hidden Initially) -->
+        <div id="transactionModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+                <h2 class="text-2xl font-bold text-center text-blue-500 mb-4">Confirm Transaction</h2>
+
+                <form id="transactionForm" action="{{ url_for('send_money') }}" method="POST">
+                    <div>
+                        <label class="block text-gray-700 font-bold">Sender's Phone</label>
+                        <input type="text" id="sender_phone" name="sender_phone" 
+                            class="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-200" 
+                            readonly>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 font-bold">Receiver's Phone</label>
+                        <input type="text" id="receiver_phone" name="receiver_phone" 
+                            class="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-200" 
+                            readonly>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 font-bold">Amount</label>
+                        <input type="number" step="0.01" name="amount" 
+                            class="border border-gray-300 rounded-md px-4 py-2 w-full" required>
+                    </div>
+                    <div class="mt-6 flex justify-between">
+                        <button type="button" onclick="closeModal()" 
+                                class="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
+                            Send Money
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+        <script>
+            let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+        
+            function onScanSuccess(decodedText, decodedResult) {
+                document.getElementById('qr-result').textContent = decodedText;
+        
+                // Extract the last 10 digits (phone number) from the QR code
+                let receiverPhone = decodedText.split(":").pop().trim(); 
+        
+                // Fetch sender's phone number from backend
+                fetch('/get_sender_phone')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('sender_phone').value = data.sender_phone; 
+                    document.getElementById('receiver_phone').value = receiverPhone; 
+        
+                    // Show modal
+                    document.getElementById('transactionModal').classList.remove('hidden');
+        
+                    // Stop the QR scanner when modal opens
+                    html5QrcodeScanner.clear();
+                });
+            }
+        
+            function closeModal() {
+                // Hide modal
+                document.getElementById('transactionModal').classList.add('hidden');
+        
+                // Reset the last scanned QR code text
+                document.getElementById('qr-result').textContent = '';
+        
+                // Restart the QR scanner
+                html5QrcodeScanner.render(onScanSuccess);
+            }
+        
+            // Start QR scanner initially
+            html5QrcodeScanner.render(onScanSuccess);
+        </script>
+
             <div class="bg-white shadow-md rounded-lg p-6 mt-6">
                 <h2 class="text-xl font-bold text-red-600 mb-4">Dispute a Transaction</h2>
                 

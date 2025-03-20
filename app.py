@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import qrcode
@@ -263,6 +263,22 @@ def reject_dispute(dispute_id):
 
     flash("Dispute rejected.", "danger")
     return redirect(url_for('admin_disputes'))
+
+@app.route('/get_sender_phone')
+def get_sender_phone():
+    if 'user_id' not in session:
+        return jsonify({'error': 'User not logged in'}), 401
+    
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute('SELECT phone FROM users WHERE id = %s', (user_id,))
+    user = cursor.fetchone()
+    
+    conn.close()
+    
+    return jsonify({'sender_phone': user[0] if user else ''})
 
 if __name__ == '__main__':
     app.run(debug=True)
