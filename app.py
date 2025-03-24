@@ -8,7 +8,7 @@ from psycopg2 import pool
 import io
 
 load_dotenv()
-
+fl = []
 app = Flask(__name__)
 app.secret_key = '123'
 
@@ -24,6 +24,7 @@ def main_page():
 
 @app.route("/adlogin")
 def admin_entry():
+    fl.append(1)
     return render_template("adlogin.html")
 
 @app.route("/login")
@@ -44,12 +45,15 @@ def about_us_page():
 
 @app.route("/admin/details")
 def user_details():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT username, phone, balance FROM users;")
-    rst = cursor.fetchall()
+    if fl:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT username, phone, balance FROM users;")
+        rst = cursor.fetchall()
 
-    return render_template("addet.html", users=rst)
+        return render_template("addet.html", users=rst)
+    else:
+        return redirect(url_for('adlogin'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -229,7 +233,6 @@ def dispute_transaction():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Insert dispute request
     cursor.execute(
         "INSERT INTO disputes (user_id, transaction_id, reason) VALUES (%s, %s, %s)",
         (user_id, transaction_id, reason)
