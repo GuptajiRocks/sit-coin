@@ -43,6 +43,22 @@ def contact_page():
 def about_us_page():
     return render_template("aboutus.html")
 
+@app.route("/contactsubmit", methods=['POST'])
+def submit_contact_details():
+    name = request.form['name']
+    email = request.form['email']
+    mesg = request.form['message']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("INSERT INTO contact (name, email, msg) VALUES (%s, %s, %s)", (name, email, mesg))
+    conn.commit()
+
+    conn.close()
+
+    return redirect(url_for('contact'))
+
 @app.route("/admin/details")
 def user_details():
     try:
