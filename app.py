@@ -57,7 +57,7 @@ def submit_contact_details():
 
     conn.close()
 
-    return redirect(url_for('contact'))
+    return render_template("contact.html")
 
 @app.route("/admin/details")
 def user_details():
