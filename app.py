@@ -45,14 +45,15 @@ def about_us_page():
 
 @app.route("/admin/details")
 def user_details():
-    if fl:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT username, phone, balance FROM users;")
-        rst = cursor.fetchall()
+    try:
+        if fl:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("SELECT username, phone, balance FROM users;")
+            rst = cursor.fetchall()
 
-        return render_template("addet.html", users=rst)
-    else:
+            return render_template("addet.html", users=rst)
+    except:
         return redirect(url_for('adlogin'))
 
 @app.route('/register', methods=['GET', 'POST'])
