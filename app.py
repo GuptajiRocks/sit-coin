@@ -137,7 +137,7 @@ def dashboard():
 
     phone, username, balance = user
 
-    cursor.execute('SELECT sender_phone, receiver_phone, amount, timestamp FROM transactions WHERE sender_phone = %s or receiver_phone = %s ORDER BY timestamp DESC',
+    cursor.execute('SELECT id, sender_phone, receiver_phone, amount, timestamp FROM transactions WHERE sender_phone = %s or receiver_phone = %s ORDER BY timestamp DESC',
                    (phone, phone,))
     transactions = cursor.fetchall()
 

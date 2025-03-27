@@ -65,6 +65,7 @@
                         <table class="min-w-full border border-gray-300 rounded-lg shadow-md">
                             <thead class="sticky top-0 bg-gray-200">
                                 <tr class="bg-gray-200 text-gray-700">
+                                    <th class="py-2 px-4 text-left">ID</th>
                                     <th class="py-2 px-4 text-left">Sender</th>
                                     <th class="py-2 px-4 text-left">Receiver</th>
                                     <th class="py-2 px-4 text-left">Amount</th>
@@ -76,8 +77,9 @@
                                 <tr class="border-b hover:bg-gray-100 transition">
                                     <td class="py-2 px-4">{{ transaction[0] }}</td>
                                     <td class="py-2 px-4">{{ transaction[1] }}</td>
-                                    <td class="py-2 px-4 text-green-600 font-semibold">₹{{ transaction[2] }}</td>
-                                    <td class="py-2 px-4">{{ transaction[3] }}</td>
+                                    <td class="py-2 px-4">{{ transaction[2] }}</td>
+                                    <td class="py-2 px-4 text-green-600 font-semibold">₹{{ transaction[3] }}</td>
+                                    <td class="py-2 px-4">{{ transaction[4] }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
