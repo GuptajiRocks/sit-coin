@@ -22,6 +22,10 @@ def get_db_connection():
 def main_page():
     return render_template("index.html")
 
+@app.route("/test/admin/detailmodal")
+def detail_modal():
+    return render_template("deets_dispute.html")
+
 @app.route("/adlogin")
 def admin_entry():
     fl.append(1)
