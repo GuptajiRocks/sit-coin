@@ -8,6 +8,7 @@ from psycopg2 import pool
 import io
 
 load_dotenv()
+
 fl = []
 app = Flask(__name__)
 app.secret_key = '123'
